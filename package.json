@@ -1,0 +1,24 @@
+{
+  "name": "sql-cms",
+  "version": "0.0.1",
+  "description": "Employee Database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magiama9/fuzzy-cuyahoga.git"
+  },
+  "author": "Sam Randels",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/magiama9/fuzzy-cuyahoga/issues"
+  },
+  "homepage": "https://github.com/magiama9/fuzzy-cuyahoga#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.0.4",
+    "mysql": "^2.18.1"
+  }
+}
