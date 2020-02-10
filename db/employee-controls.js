@@ -134,7 +134,6 @@ const displayDepartments = () => {
       };
       table.push(obj);
     });
-    connection.end();
     console.table(table);
   });
 };
@@ -143,7 +142,7 @@ const displayDepartments = () => {
 const displayRoles = () => {
   // Creates table to store objects for display
   let table = [];
-  connection.query("SELECT * FROM departments", function(err, res) {
+  connection.query("SELECT * FROM roles", function(err, res) {
     if (err) throw err;
     // Loops through each role and adds a representative object to the table
     res.forEach(idx => {
@@ -155,7 +154,6 @@ const displayRoles = () => {
       };
       table.push(obj);
     });
-    connection.end();
     console.table(table);
   });
 };
@@ -164,7 +162,7 @@ const displayRoles = () => {
 const displayEmployees = () => {
   // Creates table to store objects for display
   let table = [];
-  connection.query("SELECT * FROM departments", function(err, res) {
+  connection.query("SELECT * FROM employees", function(err, res) {
     if (err) throw err;
     // Loops through each employee and adds a representative object to the table
     res.forEach(idx => {
@@ -177,8 +175,39 @@ const displayEmployees = () => {
       };
       table.push(obj);
     });
-    connection.end();
     console.table(table);
+  });
+};
+
+// Adds Department to the Department Table
+// Expects Name1 and Name2 to be strings
+// (department_name, manager_name)
+const addDepartment = (name1, name2) => {
+  connection.query("INSERT INTO departments SET ?", {
+    department_name: name1,
+    manager_name: name2
+  });
+};
+
+// Adds Role to the Role Table
+// Expects Role to be string, salary to be number, depID to be integer matching a department ID
+const addRole = (role, salary, depID) => {
+  connection.query("INSERT INTO roles SET ?", {
+    title: role,
+    salary: salary,
+    department_id: depID
+  });
+};
+
+// Adds Employee to Employee Table
+// Expects name1, name2 to be strings
+// Expects roleID, managerID to be integers matching a value in the role/manager tables
+const addEmployee = (name1, name2, roleID, managerID) => {
+  connection.query("INSERT INTO employees SET ?", {
+    first_name: name1,
+    last_name: name2,
+    role_id: roleID,
+    manager_id: managerID
   });
 };
 
@@ -264,8 +293,13 @@ const post = (item, bid) => {
   initialize();
 };
 
-
+addEmployee("Sam", "Randels", 1, 2);
+addRole("Smokin' Dope", 33333, 3);
+addDepartment("Whining", "Dan Rosenbaum");
 displayDepartments();
+displayRoles();
+displayEmployees();
+connection.end();
 // login();
 // Begins running the program
 // initialize();
