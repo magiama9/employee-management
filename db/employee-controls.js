@@ -40,10 +40,9 @@ const viewQuestion = [
 // Asks what they would like to update
 const updateQuestion = [
   {
-    type: "list",
+    type: "input",
     name: "update",
-    message: "Which records would you like to update?",
-    choices: ["Departments", "Roles", "Employees"]
+    message: "Which employee would you like to update?"
   }
 ];
 
@@ -106,6 +105,14 @@ const empQuestions = [
     type: "input",
     name: "roleID",
     message: "What role does this employee perform?"
+  }
+];
+
+const continueQuestion = [
+  {
+    type: "confirm",
+    name: "continue",
+    message: "Would you like to do anything else?"
   }
 ];
 
@@ -184,6 +191,15 @@ const initialize = () => {
   });
 };
 
+// Asks user if they would like to continue.
+// ANSWERS.CONFIRM IS A TRUTHY
+// Reruns initial question or ends connection
+const keepGoing = () => {
+  inquirer.prompt(continueQuestion).then(answers => {
+    answers.continue ? initialize() : connection.end();
+  });
+};
+
 // Asks user what they would like to view
 // Runs corresponding display function
 const viewWhat = () => {
@@ -203,10 +219,11 @@ const viewWhat = () => {
   });
 };
 
-// Asks user what they would like to add
-// Runs corresponding add function
+// N.B. CURRENTLY ONLY ALLOWS UPDATING OF EMPLOYEE ROLE
+// TODO - ALLOW DYNAMIC UPDATING DEPENDING ON USER SELECTION
+
 const updateWhat = () => {
-  inquirer.prompt(addQuestion).then(answers => {
+  inquirer.prompt(updateQuestion).then(answers => {
     switch (answers.add) {
       case "Departments":
         addDepartment();
@@ -222,9 +239,8 @@ const updateWhat = () => {
   });
 };
 
-// N.B. CURRENTLY ONLY ALLOWS UPDATING OF EMPLOYEE ROLE
-// SWITCH CASE IS CURRENTLY UNUSED
-// TODO - ALLOW DYNAMIC UPDATING DEPENDING ON USER SELECTION
+// Asks user what they would like to add
+// Runs corresponding add function
 const addWhat = () => {
   inquirer.prompt(addQuestion).then(answers => {
     switch (answers.add) {
@@ -457,7 +473,8 @@ const post = (item, bid) => {
   initialize();
 };
 
-initialize();
+//initialize();
+keepGoing();
 // addEmployee("Sam", "Randels", 1, 2);
 // updateEmployee(1, 3);
 // addRole("Smokin' Dope", 33333, 3);
