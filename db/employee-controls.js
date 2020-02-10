@@ -42,7 +42,12 @@ const updateQuestion = [
   {
     type: "input",
     name: "update",
-    message: "Which employee would you like to update?"
+    message: "Which employee ID would you like to update?"
+  },
+  {
+    type: "input",
+    name: "role",
+    message: "What is their new role ID?"
   }
 ];
 
@@ -215,7 +220,6 @@ const viewWhat = () => {
         displayEmployees();
         break;
     }
-    connection.end();
   });
 };
 
@@ -224,18 +228,7 @@ const viewWhat = () => {
 
 const updateWhat = () => {
   inquirer.prompt(updateQuestion).then(answers => {
-    switch (answers.add) {
-      case "Departments":
-        addDepartment();
-        break;
-      case "Roles":
-        addRole();
-        break;
-      case "Employees":
-        addEmployee();
-        break;
-    }
-    connection.end();
+    updateEmployee(answers.update, answers.role);
   });
 };
 
@@ -281,6 +274,9 @@ const displayDepartments = () => {
     });
     console.table(table);
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Display Roles
@@ -301,6 +297,9 @@ const displayRoles = () => {
     });
     console.table(table);
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Display Employees
@@ -322,19 +321,20 @@ const displayEmployees = () => {
     });
     console.table(table);
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Fetches role ID and department ID
 // Expects role to be a string
 // Role comes from user input, so the value is escaped from the query
 const getRole = role => {
-  connection.query(
-    "SELECT id, department_id FROM roles WHERE title = ?",
-    role,
-    (err, res) => {
-      return res[0].id;
-    }
-  );
+  let id;
+  connection.query("SELECT id FROM roles WHERE title = ?", role, (err, res) => {
+    id = res[0].id;
+  });
+  return id;
 };
 
 // Adds Department to the Department Table
@@ -345,6 +345,9 @@ const addDepartment = (name1, name2) => {
     department_name: name1,
     manager_name: name2
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Adds Role to the Role Table
@@ -355,6 +358,9 @@ const addRole = (role, salary, depID) => {
     salary: salary,
     department_id: depID
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Adds Employee to Employee Table
@@ -367,6 +373,9 @@ const addEmployee = (name1, name2, roleID, managerID) => {
     role_id: roleID,
     manager_id: managerID
   });
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
 // Updates Employee Role
@@ -389,92 +398,20 @@ const updateEmployee = (id, role_id) => {
       console.log(res.affectedRows + " item updated!\n");
     }
   );
+
+  // After function executes, ask if they'd like to continue
+  keepGoing();
 };
 
-// Begins logic flow for bidding
-const bid = () => {
-  // Asks necessary questions of bidder
-  inquirer.prompt(bidQuestions).then(answers => {
-    // Selects the item they would like to bid on
-    connection.query(
-      "SELECT * FROM items WHERE id=?",
-      answers.bidItem,
-      function(err, res) {
-        if (err) throw err;
+initialize();
 
-        // Compares item's price with user's bid
-        testBid(answers.bidPrice, res[0].highbid, res[0].id);
-      }
-    );
-  });
-};
 
-// Tests bid against high bid.
-const testBid = (num, num2, id) => {
-  if (num > num2) {
-    // Updates the high bid if the user bid is higher
-    updateBid(num, id);
-    return;
-  }
+/* ************************************************************
+                      TESTING AREA
 
-  // If user bid is lower it kills the connection and tells them.
-  console.log("Your bid was not accepted.");
-  connection.end();
-};
+          I COULD REMOVE THIS BUT I FELT LIKE NOT.
 
-// Runs only if user bid is higher than stored bid
-const updateBid = (num, id) => {
-  // Tell the user their bid was accepted
-  console.log("Your bid was accepted!");
-
-  // Updates the high bid of the item
-  connection.query(
-    "UPDATE items SET ? WHERE ?",
-    [
-      {
-        highbid: num
-      },
-      {
-        id: id
-      }
-    ],
-    function(err, res) {
-      if (err) throw err;
-
-      // Displays how many items were updated
-      console.log(res.affectedRows + " item updated!\n");
-    }
-  );
-
-  // Kills the connection
-  connection.end();
-  initialize();
-};
-
-const postAsk = () => {
-  inquirer.prompt(postQuestions).then(answers => {
-    post(answers.postItem, answers.itemMin);
-  });
-};
-// Posts a new item into the DB
-const post = (item, bid) => {
-  connection.query(
-    "INSERT INTO items SET ?",
-    {
-      itemname: item,
-      highbid: bid
-    },
-    function(err, res) {
-      if (err) throw err;
-      console.log("\n" + res.affectedRows + " item was posted!\n");
-      connection.end();
-    }
-  );
-  initialize();
-};
-
-//initialize();
-keepGoing();
+************************************************************* */
 // addEmployee("Sam", "Randels", 1, 2);
 // updateEmployee(1, 3);
 // addRole("Smokin' Dope", 33333, 3);
