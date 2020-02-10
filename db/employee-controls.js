@@ -27,33 +27,38 @@ const initialQuestion = [
   }
 ];
 
-// Questions if they would like to bid on an item
-const bidQuestions = [
+// Asks what they would like to view
+const viewQuestion = [
   {
-    type: "input",
-    name: "bidItem",
-    message: "What is the ID of the item you would like to bid on?"
-  },
-  {
-    type: "input",
-    name: "bidPrice",
-    message: "How much would you like to bid in USD?"
+    type: "list",
+    name: "view",
+    message: "Which records would you like to view?",
+    choices: ["Departments", "Roles", "Employees"]
   }
 ];
 
-// Questions if they would like to post an item
-const postQuestions = [
+// Asks what they would like to update
+const updateQuestion = [
   {
-    type: "input",
-    name: "postItem",
-    message: "What is the name of the item you would like to post for sale?"
-  },
-  {
-    type: "input",
-    name: "itemMin",
-    message: "What would you like to set for a minimum bid amount?"
+    type: "list",
+    name: "update",
+    message: "Which records would you like to update?",
+    choices: ["Departments", "Roles", "Employees"]
   }
 ];
+
+// Asks what they would like to add
+const addQuestion = [
+  {
+    type: "list",
+    name: "add",
+    message: "Which type of record would you like to add?",
+    choices: ["Departments", "Roles", "Employees"]
+  }
+];
+
+
+
 
 const loginQ = [
   {
@@ -113,9 +118,39 @@ const login = () => {
 };
 
 // Initialize w/ first user question
+// Runs different inquirer prompts based on user input
 const initialize = () => {
   inquirer.prompt(initialQuestion).then(answers => {
-    answers.transaction[0] === "Post" ? postAsk() : displayItems();
+    switch (answers.initialize) {
+      case "View Records":
+        viewWhat();
+        break;
+      case "Update a Record":
+        updateWhat();
+        break;
+      case "Add a Record":
+        addWhat();
+        break;
+    }
+  });
+};
+
+// Asks user what they would like to view
+// Runs corresponding display function
+const viewWhat = () => {
+  inquirer.prompt(viewQuestion).then(answers => {
+    switch (answers.view) {
+      case "Departments":
+        displayDepartments();
+        break;
+      case "Roles":
+        displayRoles();
+        break;
+      case "Employees":
+        displayEmployees();
+        break;
+    }
+    connection.end();
   });
 };
 
@@ -230,8 +265,8 @@ const updateEmployee = (id, role_id) => {
       // Displays how many items were updated
       console.log(res.affectedRows + " item updated!\n");
     }
-  )
-}
+  );
+};
 
 // Begins logic flow for bidding
 const bid = () => {
@@ -315,14 +350,15 @@ const post = (item, bid) => {
   initialize();
 };
 
-addEmployee("Sam", "Randels", 1, 2);
-updateEmployee(1, 3);
-addRole("Smokin' Dope", 33333, 3);
-addDepartment("Whining", "Dan Rosenbaum");
-displayDepartments();
-displayRoles();
-displayEmployees();
-connection.end();
+
+initialize();
+// addEmployee("Sam", "Randels", 1, 2);
+// updateEmployee(1, 3);
+// addRole("Smokin' Dope", 33333, 3);
+// addDepartment("Whining", "Dan Rosenbaum");
+// displayDepartments();
+// displayRoles();
+// displayEmployees();
 // login();
 // Begins running the program
 // initialize();
