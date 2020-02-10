@@ -57,8 +57,52 @@ const addQuestion = [
   }
 ];
 
+// Asks for the input to make a new department
+const depQuestions = [
+  {
+    type: "input",
+    name: "depName",
+    message: "What is the name of the department you would like to add?"
+  },
+  {
+    type: "input",
+    name: "managerName",
+    message: "What is the name of the department's manager?"
+  }
+];
 
+// Asks for the input to make a new role
+const roleQuestions = [
+  {
+    type: "input",
+    name: "title",
+    message: "What is the title you would like to add?"
+  },
+  {
+    type: "input",
+    name: "salary",
+    message: "What is the salary for this role?"
+  },
+  {
+    type: "input",
+    name: "department",
+    message: "What is the ID of the department for this role?"
+  }
+];
 
+// Asks for the input to make a new employee
+const empQuestions = [
+  {
+    type: "input",
+    name: "depName",
+    message: "What is the name of the department you would like to add?"
+  },
+  {
+    type: "input",
+    name: "managerName",
+    message: "What is the name of the department's manager?"
+  }
+];
 
 const loginQ = [
   {
@@ -349,7 +393,6 @@ const post = (item, bid) => {
   );
   initialize();
 };
-
 
 initialize();
 // addEmployee("Sam", "Randels", 1, 2);
