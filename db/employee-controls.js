@@ -203,6 +203,51 @@ const viewWhat = () => {
   });
 };
 
+// Asks user what they would like to add
+// Runs corresponding add function
+const updateWhat = () => {
+  inquirer.prompt(addQuestion).then(answers => {
+    switch (answers.add) {
+      case "Departments":
+        addDepartment();
+        break;
+      case "Roles":
+        addRole();
+        break;
+      case "Employees":
+        addEmployee();
+        break;
+    }
+    connection.end();
+  });
+};
+
+// N.B. CURRENTLY ONLY ALLOWS UPDATING OF EMPLOYEE ROLE
+// SWITCH CASE IS CURRENTLY UNUSED
+// TODO - ALLOW DYNAMIC UPDATING DEPENDING ON USER SELECTION
+const addWhat = () => {
+  inquirer.prompt(addQuestion).then(answers => {
+    switch (answers.add) {
+      case "Departments":
+        inquirer.prompt(depQuestions).then(answers => {
+          addDepartment(answers.depName, answers.managerName);
+        });
+        break;
+      case "Roles":
+        inquirer.prompt(roleQuestions).then(answers => {
+          addRole(answers.title, answers.salary, answers.department);
+        });
+        break;
+      case "Employees":
+        inquirer.prompt(empQuestions).then(answers => {
+          let id = getRole(answers.roleID);
+          addEmployee(answers.firstName, answers.lastName, id);
+        });
+        break;
+    }
+  });
+};
+
 // Display Departments
 const displayDepartments = () => {
   // Creates table to store objects for display
@@ -271,8 +316,7 @@ const getRole = role => {
     "SELECT id, department_id FROM roles WHERE title = ?",
     role,
     (err, res) => {
-      console.log(res[0].id);
-      console.log(res[0].department_id);
+      return res[0].id;
     }
   );
 };
@@ -413,7 +457,7 @@ const post = (item, bid) => {
   initialize();
 };
 
-//initialize();
+initialize();
 // addEmployee("Sam", "Randels", 1, 2);
 // updateEmployee(1, 3);
 // addRole("Smokin' Dope", 33333, 3);
@@ -421,7 +465,7 @@ const post = (item, bid) => {
 // displayDepartments();
 // displayRoles();
 // displayEmployees();
-getRole("Smokin' Dope");
+// getRole("Smokin' Dope");
 // login();
 // Begins running the program
 // initialize();
