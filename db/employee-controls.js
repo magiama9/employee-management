@@ -86,7 +86,7 @@ const roleQuestions = [
   {
     type: "input",
     name: "department",
-    message: "What is the ID of the department for this role?"
+    message: "Which department is this role in?"
   }
 ];
 
@@ -94,13 +94,18 @@ const roleQuestions = [
 const empQuestions = [
   {
     type: "input",
-    name: "depName",
-    message: "What is the name of the department you would like to add?"
+    name: "firstName",
+    message: "What is the first name of the employee you would like to add?"
   },
   {
     type: "input",
-    name: "managerName",
-    message: "What is the name of the department's manager?"
+    name: "lastName",
+    message: "What is their last name?"
+  },
+  {
+    type: "input",
+    name: "roleID",
+    message: "What role does this employee perform?"
   }
 ];
 
@@ -202,7 +207,7 @@ const viewWhat = () => {
 const displayDepartments = () => {
   // Creates table to store objects for display
   let table = [];
-  connection.query("SELECT * FROM departments", function(err, res) {
+  connection.query("SELECT * FROM departments", (err, res) => {
     if (err) throw err;
     // Loops through each department and adds a representative object to the table
     res.forEach(idx => {
@@ -221,7 +226,7 @@ const displayDepartments = () => {
 const displayRoles = () => {
   // Creates table to store objects for display
   let table = [];
-  connection.query("SELECT * FROM roles", function(err, res) {
+  connection.query("SELECT * FROM roles", (err, res) => {
     if (err) throw err;
     // Loops through each role and adds a representative object to the table
     res.forEach(idx => {
@@ -241,7 +246,7 @@ const displayRoles = () => {
 const displayEmployees = () => {
   // Creates table to store objects for display
   let table = [];
-  connection.query("SELECT * FROM employees", function(err, res) {
+  connection.query("SELECT * FROM employees", (err, res) => {
     if (err) throw err;
     // Loops through each employee and adds a representative object to the table
     res.forEach(idx => {
@@ -256,6 +261,20 @@ const displayEmployees = () => {
     });
     console.table(table);
   });
+};
+
+// Fetches role ID and department ID
+// Expects role to be a string
+// Role comes from user input, so the value is escaped from the query
+const getRole = role => {
+  connection.query(
+    "SELECT id, department_id FROM roles WHERE title = ?",
+    role,
+    (err, res) => {
+      console.log(res[0].id);
+      console.log(res[0].department_id);
+    }
+  );
 };
 
 // Adds Department to the Department Table
@@ -394,7 +413,7 @@ const post = (item, bid) => {
   initialize();
 };
 
-initialize();
+//initialize();
 // addEmployee("Sam", "Randels", 1, 2);
 // updateEmployee(1, 3);
 // addRole("Smokin' Dope", 33333, 3);
@@ -402,6 +421,7 @@ initialize();
 // displayDepartments();
 // displayRoles();
 // displayEmployees();
+getRole("Smokin' Dope");
 // login();
 // Begins running the program
 // initialize();
