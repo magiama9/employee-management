@@ -211,6 +211,28 @@ const addEmployee = (name1, name2, roleID, managerID) => {
   });
 };
 
+// Updates Employee Role
+// Expects id to be employeeID, role_id to match an id in roles table
+const updateEmployee = (id, role_id) => {
+  connection.query(
+    "UPDATE employees SET ? WHERE ?",
+    [
+      {
+        role_id: role_id
+      },
+      {
+        id: id
+      }
+    ],
+    function(err, res) {
+      if (err) throw err;
+
+      // Displays how many items were updated
+      console.log(res.affectedRows + " item updated!\n");
+    }
+  )
+}
+
 // Begins logic flow for bidding
 const bid = () => {
   // Asks necessary questions of bidder
@@ -294,6 +316,7 @@ const post = (item, bid) => {
 };
 
 addEmployee("Sam", "Randels", 1, 2);
+updateEmployee(1, 3);
 addRole("Smokin' Dope", 33333, 3);
 addDepartment("Whining", "Dan Rosenbaum");
 displayDepartments();
