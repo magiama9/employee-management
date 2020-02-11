@@ -137,6 +137,7 @@ const loginQ = [
 // Handles login logic
 // If user exists, compares password
 // If user doesn't exist, creates new user
+// THIS IS OBVIOUSLY NOT A SECURE IMPLEMENTATION
 const login = () => {
   inquirer.prompt(loginQ).then(answers => {
     connection.query(
@@ -225,7 +226,6 @@ const viewWhat = () => {
 
 // N.B. CURRENTLY ONLY ALLOWS UPDATING OF EMPLOYEE ROLE
 // TODO - ALLOW DYNAMIC UPDATING DEPENDING ON USER SELECTION
-
 const updateWhat = () => {
   inquirer.prompt(updateQuestion).then(answers => {
     updateEmployee(answers.update, answers.role);
@@ -403,7 +403,7 @@ const updateEmployee = (id, role_id) => {
   keepGoing();
 };
 
-initialize();
+login();
 
 
 /* ************************************************************
