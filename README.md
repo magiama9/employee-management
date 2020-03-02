@@ -1,6 +1,4 @@
-# fuzzy-
-
-Unit 12 Homework --- MySQL
+# employee-management-tool
 
 ## About This Tool
 
